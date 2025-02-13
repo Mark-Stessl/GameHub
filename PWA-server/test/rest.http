@@ -1,0 +1,30 @@
+GET http://localhost:3000/games
+
+### Neues Game erstellen
+POST http://localhost:3000/games
+Content-Type: application/json
+
+{
+    "title": "Super Mario Odyssey",
+    "genre": "Platformer",
+    "platform": "Nintendo Switch",
+    "rating": 9.5,
+    "release_date": "2017-10-27",
+    "img": "images/mario_odyssey.jpg"
+}
+
+### Game updaten
+PUT http://localhost:3000/games/5
+Content-Type: application/json
+
+{
+    "title": "Super Mario Odyssey Updated",
+    "genre": "Platformer",
+    "platform": "Nintendo Switch",
+    "rating": 9.7,
+    "release_date": "2017-10-27",
+    "img": "images/mario_odyssey.jpg"
+}
+
+### Game löschen
+DELETE http://localhost:3000/games/5
