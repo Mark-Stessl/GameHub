@@ -4,21 +4,21 @@ import { ref } from 'vue';
 
 export const useUserStore = defineStore('userstore', () => {
   const game = ref([]);
-
+  const API = import.meta.env.VITE_DEVELOPMENT;
   const GetGames = async () => {
-    const response = await axios.get('http://localhost:3000/games');
+    const response = await axios.get(API + '/games');
     game.value = response.data;
   };
 
   // Delete a game
   const deleteGame = async (id) => {
-      await axios.delete('http://localhost:3000/games/' + id);
-      await GetGames();
+    await axios.delete(API + '/games/' + id);
+    await GetGames();
   };
 
   const addGame = async (newGame) => {
     try {
-      await axios.post('http://localhost:3000/games', newGame);
+      await axios.post(API + '/games', newGame);
       await GetGames();
     } catch (error) {
       console.error('Error adding game:', error);
@@ -28,7 +28,7 @@ export const useUserStore = defineStore('userstore', () => {
   // Update a game
   const updateGame = async (id, updatedGame) => {
     try {
-      await axios.put(`http://localhost:3000/games/${id}`, updatedGame);
+      await axios.put(`${API}/games/${id}`, updatedGame);
       await GetGames();
     } catch (error) {
       console.error('Error updating game:', error);

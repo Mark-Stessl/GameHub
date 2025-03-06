@@ -8,8 +8,8 @@ import { quasar, transformAssetUrls } from '@quasar/vite-plugin';
 
 export default defineConfig({
   build: {
-    outDir: '../server/public',
-    emptyOutDir: false,
+    outDir: 'dist',
+    emptyOutDir: true,
   },
   server: {
     port: 8080,
@@ -52,12 +52,12 @@ export default defineConfig({
     },
   },
   preview: {
-    port: 4175,
-    proxy: {
-      '/games': {
-        target: 'http://localhost:3000',
-        changeOrigin: true
-      },
-    },
+    port: 5555,
+    // proxy: {
+    //   '/games': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true,
+    //   },
+    // },
   },
 });
