@@ -4,7 +4,7 @@ import { ref } from 'vue';
 
 export const useUserStore = defineStore('userstore', () => {
   const game = ref([]);
-  const API = import.meta.env.VITE_DEVELOPMENT;
+  const API = import.meta.env.VITE_PRODUCTION;
   const GetGames = async () => {
     const response = await axios.get(API + '/games');
     game.value = response.data;
