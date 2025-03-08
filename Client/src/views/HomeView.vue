@@ -1,8 +1,13 @@
 <template>
   <div>
     <div class="page-container">
+      <!-- Offline Banner -->
+      <div v-if="isOffline" class="offline-banner">
+        Du bist derzeit offline. Einige Funktionen sind deaktiviert, bis die Verbindung wiederhergestellt ist
+      </div>
+
       <!-- Add Game Button -->
-      <q-btn class="add-game-btn" color="primary" icon="add" @click="openAddGameDialog">
+      <q-btn class="add-game-btn" color="primary" @click="openAddGameDialog" :disable="isOffline">
         Add Game
       </q-btn>
 
@@ -18,10 +23,10 @@
           </div>
           <!-- Edit and Delete Buttons -->
           <div class="card-actions">
-            <q-btn class="edit-btn" color="primary" icon="edit" @click="openEditGameDialog(game)">
+            <q-btn class="edit-btn" color="primary" @click="openEditGameDialog(game)" :disable="isOffline">
               Edit
             </q-btn>
-            <q-btn class="delete-btn" color="negative" icon="delete" @click="store.deleteGame(game.id)">
+            <q-btn class="delete-btn" color="negative" @click="store.deleteGame(game.id)" :disable="isOffline">
               Delete
             </q-btn>
           </div>
@@ -83,7 +88,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useUserStore } from '../stores/usestore';
 import CameraPreview from '../components/CameraPreview.vue';
 
@@ -91,6 +96,7 @@ const store = useUserStore();
 const addGameDialog = ref(false);
 const editGameDialog = ref(false);
 const cameraDialog = ref(false);
+const isOffline = ref(!navigator.onLine);
 const newGame = ref({
   title: '',
   genre: '',
@@ -109,15 +115,32 @@ const selectedGame = ref({
   img: ''
 });
 
+// Monitor online/offline status
+const updateOnlineStatus = () => {
+  isOffline.value = !navigator.onLine;
+};
+
 onMounted(async () => {
   await store.GetGames();
+  
+  // Add event listeners for online/offline events
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+});
+
+onUnmounted(() => {
+  // Remove event listeners when component is destroyed
+  window.removeEventListener('online', updateOnlineStatus);
+  window.removeEventListener('offline', updateOnlineStatus);
 });
 
 const openAddGameDialog = () => {
+  if (isOffline.value) return;
   addGameDialog.value = true;
 };
 
 const openEditGameDialog = (game) => {
+  if (isOffline.value) return;
   selectedGame.value = { ...game };
   editGameDialog.value = true;
 };
@@ -132,6 +155,8 @@ const handleCapture = (imageData) => {
 };
 
 const addGame = async () => {
+  if (isOffline.value) return;
+  
   await store.addGame(newGame.value);
   addGameDialog.value = false;
   newGame.value = {
@@ -145,10 +170,11 @@ const addGame = async () => {
 };
 
 const updateGame = async () => {
+  if (isOffline.value) return;
+  
   await store.updateGame(selectedGame.value.id, selectedGame.value);
   editGameDialog.value = false;
 };
-
 
 const formatDate = (dateString) => {
   return dateString ? dateString.split('T')[0] : ''; 
@@ -156,22 +182,23 @@ const formatDate = (dateString) => {
 </script>
 
 <style scoped>
-.page-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding: 1rem;
-  background-color: #36353B;
-}
-
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
   width: 100%;
   max-width: 1200px;
   padding: 1rem;
+  margin: 0 auto;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  background-color: #36353B;
 }
 
 .game-card {
@@ -183,8 +210,7 @@ const formatDate = (dateString) => {
   display: flex;
   flex-direction: column;
   text-align: left;
-  justify-content: space-between;
-  height: 100%; 
+  height: 100%;
 }
 
 .card-img {
@@ -236,8 +262,6 @@ const formatDate = (dateString) => {
   margin-top: 2rem;
 }
 
-
-/* Custom Dialog Styling */
 .custom-dialog {
   background-color: #211e23;
   color: #ffffff;
@@ -259,5 +283,18 @@ const formatDate = (dateString) => {
 .imgMargin {
   margin-top: 1rem;
 }
-</style>
 
+.offline-banner {
+  background-color: #ff9800;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 1200px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+</style>
