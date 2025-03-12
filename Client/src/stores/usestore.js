@@ -10,7 +10,6 @@ export const useUserStore = defineStore('userstore', () => {
     game.value = response.data;
   };
 
-  // Delete a game
   const deleteGame = async (id) => {
     await axios.delete(API + '/games/' + id);
     await GetGames();
@@ -25,7 +24,6 @@ export const useUserStore = defineStore('userstore', () => {
     }
   };
 
-  // Update a game
   const updateGame = async (id, updatedGame) => {
     try {
       await axios.put(`${API}/games/${id}`, updatedGame);

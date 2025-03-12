@@ -1,6 +1,6 @@
 GET http://localhost:3000/games
 
-### Neues Game erstellen
+###
 POST http://localhost:3000/games
 Content-Type: application/json
 
@@ -13,7 +13,7 @@ Content-Type: application/json
     "img": "images/mario_odyssey.jpg"
 }
 
-### Game updaten
+###
 PUT http://localhost:3000/games/5
 Content-Type: application/json
 
@@ -26,5 +26,5 @@ Content-Type: application/json
     "img": "images/mario_odyssey.jpg"
 }
 
-### Game löschen
+###
 DELETE http://localhost:3000/games/5

@@ -25,14 +25,13 @@ export default defineConfig({
         mode: 'development',
         runtimeCaching: [
           {
-            // Main games collection endpoint
             urlPattern: '/games',
             handler: 'NetworkFirst',
             options: {
               cacheName: 'gamehub',
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 1, // 1 day
+                maxAgeSeconds: 60 * 60 * 24 * 1,
               },
               cacheableResponse: {
                 statuses: [0, 200],
@@ -40,14 +39,13 @@ export default defineConfig({
             },
           },
           {
-            // Individual game endpoint (for specific game IDs)
             urlPattern: new RegExp('/games/[0-9a-zA-Z-_]+$'),
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'game-details-cache',
               expiration: {
                 maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 1, // 1 day
+                maxAgeSeconds: 60 * 60 * 24 * 1,
               },
               cacheableResponse: {
                 statuses: [0, 200],
@@ -55,14 +53,13 @@ export default defineConfig({
             },
           },
           {
-            // For the localhost endpoint from your store
             urlPattern: new RegExp('^http://localhost:3000/games'),
             handler: 'NetworkFirst',
             options: {
               cacheName: 'external-games-api-cache',
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 1, // 1 day
+                maxAgeSeconds: 60 * 60 * 24 * 1,
               },
               cacheableResponse: {
                 statuses: [0, 200],
@@ -70,14 +67,13 @@ export default defineConfig({
             },
           },
           {
-            // Cache images from games
             urlPattern: ({ request }) => request.destination === 'image',
             handler: 'CacheFirst',
             options: {
               cacheName: 'game-images',
               expiration: {
                 maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                maxAgeSeconds: 60 * 60 * 24 * 30,
               },
               cacheableResponse: {
                 statuses: [0, 200],

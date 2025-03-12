@@ -1,12 +1,10 @@
 <template>
   <div>
     <div class="page-container">
-      <!-- Offline Banner -->
       <div v-if="isOffline" class="offline-banner">
         Du bist derzeit offline. Einige Funktionen sind deaktiviert, bis die Verbindung wiederhergestellt ist
       </div>
 
-      <!-- Add Game Button -->
       <q-btn class="add-game-btn" color="primary" @click="openAddGameDialog" :disable="isOffline">
         Add Game
       </q-btn>
@@ -21,7 +19,6 @@
             <p><strong>Bewertung:</strong> {{ game.rating }}</p>
             <p><strong>Veröffentlichtungsdatum:</strong> {{ formatDate(game.release_date) }}</p>
           </div>
-          <!-- Edit and Delete Buttons -->
           <div class="card-actions">
             <q-btn class="edit-btn" color="primary" @click="openEditGameDialog(game)" :disable="isOffline">
               Edit
@@ -34,7 +31,6 @@
       </div>
     </div>
 
-    <!-- Add Game Dialog -->
     <q-dialog v-model="addGameDialog">
       <q-card class="custom-dialog">
         <q-card-section>
@@ -47,7 +43,6 @@
           <q-input v-model="newGame.rating" label="Rating" type="number" dark filled />
           <q-input v-model="newGame.release_date" label="Release Date" type="date" dark filled />
           
-          <!-- Image Capture -->
           <q-btn class="imgMargin" label="Take Photo" color="primary" @click="openCameraDialog" />
           <img v-if="newGame.img" :src="newGame.img" class="preview-img" />
 
@@ -59,12 +54,10 @@
       </q-card>
     </q-dialog>
 
-    <!-- Camera Dialog -->
     <q-dialog v-model="cameraDialog">
       <camera-preview @capture="handleCapture" @close="cameraDialog = false" />
     </q-dialog>
 
-    <!-- Edit Game Dialog -->
     <q-dialog v-model="editGameDialog">
       <q-card class="custom-dialog">
         <q-card-section>
@@ -88,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useUserStore } from '../stores/usestore';
 import CameraPreview from '../components/CameraPreview.vue';
 
@@ -115,7 +108,6 @@ const selectedGame = ref({
   img: ''
 });
 
-// Monitor online/offline status
 const updateOnlineStatus = () => {
   isOffline.value = !navigator.onLine;
 };
@@ -123,7 +115,6 @@ const updateOnlineStatus = () => {
 onMounted(async () => {
   await store.GetGames();
   
-  // Add event listeners for online/offline events
   window.addEventListener('online', updateOnlineStatus);
   window.addEventListener('offline', updateOnlineStatus);
 });
