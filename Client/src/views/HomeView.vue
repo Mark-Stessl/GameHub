@@ -128,12 +128,6 @@ onMounted(async () => {
   window.addEventListener('offline', updateOnlineStatus);
 });
 
-onUnmounted(() => {
-  // Remove event listeners when component is destroyed
-  window.removeEventListener('online', updateOnlineStatus);
-  window.removeEventListener('offline', updateOnlineStatus);
-});
-
 const openAddGameDialog = () => {
   if (isOffline.value) return;
   addGameDialog.value = true;
